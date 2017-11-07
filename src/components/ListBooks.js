@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import BookView from './BookView'
+import PropTypes from 'prop-types'
 
 
 class ListBooks extends Component {
+
+  static propTypes = {
+    books: PropTypes.array.isRequired,
+    title: PropTypes.string.isRequired,
+    onUpdateBook: PropTypes.func.isRequired
+  }
 
   render() {
     const { title, books } = this.props
@@ -14,7 +21,7 @@ class ListBooks extends Component {
           <ol className="books-grid">
             {books.map((book) => (
               <li key={book.id}>
-                <BookView book={book} />
+                <BookView book={book} onUpdateBook={this.props.onUpdateBook} />
               </li>
             ))}
           </ol>

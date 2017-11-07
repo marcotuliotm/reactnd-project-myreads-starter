@@ -1,5 +1,5 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
 import ListAllBooks from './components/ListAllBooks'
 
@@ -11,7 +11,20 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-    showSearchPage: false
+    showSearchPage: false,
+    books: [],
+  }
+
+  componentDidMount() {
+    this.loadBooks()
+  }
+
+  updateBook = (book, shelf) => BooksAPI.update(book, shelf).then(e => this.loadBooks())
+
+  loadBooks = () => {
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books })
+    })
   }
 
   render() {
@@ -30,7 +43,7 @@ class BooksApp extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author"/>
+                <input type="text" placeholder="Search by title or author" />
 
               </div>
             </div>
@@ -39,8 +52,8 @@ class BooksApp extends React.Component {
             </div>
           </div>
         ) : (
-          <ListAllBooks/>
-        )}
+            <ListAllBooks books={this.state.books} onUpdateBook={this.updateBook} />
+          )}
       </div>
     )
   }
