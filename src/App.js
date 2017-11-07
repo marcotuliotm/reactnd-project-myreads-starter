@@ -17,12 +17,29 @@ class BooksApp extends React.Component {
     this.loadBooks()
   }
 
-  updateBook = (book, shelf) => BooksAPI.update(book, shelf).then(e => this.loadBooks())
+  updateBook = (book, shelf) => {
+    BooksAPI.update(book, shelf).then(e => {
+      this.loadBooks()
+      this.updateBooksShearch()
+    })
+    book.shelf = shelf
+  }
 
   shearchBook = (query) => {
     this.setState({ search: query })
-    BooksAPI.search(query, 20).then((booksShearch) => this.setState({ booksShearch })).catch(e => this.setState({ booksShearch: [] }))
+    this.updateBooksShearch()
   }
+
+  updateBooksShearch = () => BooksAPI.search(this.state.search, 20).then((booksShearch) => {
+    if (booksShearch.error) {
+      booksShearch = []
+    }
+    booksShearch.map((book) =>
+      BooksAPI.get(book.id).then((serverBook) => book.shelf = serverBook.shelf)
+    )
+    this.setState({ booksShearch })
+  }).catch(e => this.setState({ booksShearch: [] }))
+
 
   loadBooks = () => BooksAPI.getAll().then((books) => this.setState({ books }))
 
@@ -30,7 +47,7 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         <Route path='/search' render={({ history }) => (
-          <SearchBook search={this.state.shearch} booksShearch={this.state.booksShearch} onUpdateBook={this.updateBook} onShearchBook={this.shearchBook} onClickReturn={() => history.push('/')} />
+          <SearchBook search={this.state.search} booksShearch={this.state.booksShearch} onUpdateBook={this.updateBook} onShearchBook={this.shearchBook} onClickReturn={() => history.push('/')} />
         )} />
         <Route exact path='/' render={({ history }) => (
           <ListAllBooks books={this.state.books} onUpdateBook={this.updateBook} onClickSearch={() => history.push('/search')} />

@@ -10,6 +10,7 @@ class SearchBook extends Component {
     onUpdateBook: PropTypes.func.isRequired,
     onShearchBook: PropTypes.func.isRequired,
     onClickReturn: PropTypes.func.isRequired,
+    search:  PropTypes.string.isRequired,
   }
 
   render() {
