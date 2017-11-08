@@ -19,10 +19,11 @@ class BooksApp extends React.Component {
 
   updateBook = (book, shelf) => {
     BooksAPI.update(book, shelf).then(e => {
+      book.shelf = shelf
       this.loadBooks()
       this.updateBooksShearch()
     })
-    book.shelf = shelf
+    
   }
 
   shearchBook = (query) => {
@@ -34,9 +35,10 @@ class BooksApp extends React.Component {
     if (booksShearch.error) {
       booksShearch = []
     }
-    booksShearch.map((book) =>
+    for (const book of booksShearch) {
       BooksAPI.get(book.id).then((serverBook) => book.shelf = serverBook.shelf)
-    )
+    }
+    
     this.setState({ booksShearch })
   }).catch(e => this.setState({ booksShearch: [] }))
 
