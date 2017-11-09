@@ -7,10 +7,14 @@ import SearchBook from './components/SearchBook'
 
 
 class BooksApp extends React.Component {
-  state = {
-    books: [],
-    booksShearch: [],
-    search: '',
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      books: [],
+      booksShearch: [],
+      search: '',
+    }
   }
 
   componentDidMount() {
@@ -23,7 +27,7 @@ class BooksApp extends React.Component {
       this.loadBooks()
       this.updateBooksShearch()
     })
-    
+
   }
 
   shearchBook = (query) => {
@@ -31,16 +35,21 @@ class BooksApp extends React.Component {
     this.updateBooksShearch()
   }
 
-  updateBooksShearch = () => BooksAPI.search(this.state.search, 20).then((booksShearch) => {
-    if (booksShearch.error) {
-      booksShearch = []
+  updateBooksShearch = () => {
+    if (this.state.search.length > 0) {
+      BooksAPI.search(this.state.search, 20).then((booksShearch) => {
+        if (booksShearch.error) {
+          booksShearch = []
+        }
+        
+        for (const book of booksShearch) {
+          BooksAPI.get(book.id).then((serverBook) => book.shelf = serverBook.shelf)
+        }
+
+        this.setState({ booksShearch })
+      }).catch(e => this.setState({ booksShearch: [] }))
     }
-    for (const book of booksShearch) {
-      BooksAPI.get(book.id).then((serverBook) => book.shelf = serverBook.shelf)
-    }
-    
-    this.setState({ booksShearch })
-  }).catch(e => this.setState({ booksShearch: [] }))
+  }
 
 
   loadBooks = () => BooksAPI.getAll().then((books) => this.setState({ books }))
