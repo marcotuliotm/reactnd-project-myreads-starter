@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import BookView from './BookView'
 import PropTypes from 'prop-types'
+import { DebounceInput } from 'react-debounce-input'
 
 
 class SearchBook extends Component {
@@ -10,7 +11,7 @@ class SearchBook extends Component {
     onUpdateBook: PropTypes.func.isRequired,
     onShearchBook: PropTypes.func.isRequired,
     onClickReturn: PropTypes.func.isRequired,
-    search:  PropTypes.string.isRequired,
+    search: PropTypes.string.isRequired,
   }
 
   render() {
@@ -21,7 +22,7 @@ class SearchBook extends Component {
         <div className="search-books-bar">
           <a className="close-search" onClick={() => onClickReturn()}>Close</a>
           <div className="search-books-input-wrapper">
-            <input type="text" placeholder="Search by title or author" value={search} onChange={(event) => onShearchBook(event.target.value)} />
+            <DebounceInput minLength={2} debounceTimeout={500} type="text" placeholder="Search by title or author" value={search} onChange={(event) => onShearchBook(event.target.value)} />
           </div>
         </div>
         <div className="search-books-results">

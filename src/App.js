@@ -41,13 +41,15 @@ class BooksApp extends React.Component {
         if (booksShearch.error) {
           booksShearch = []
         }
-        
+
         for (const book of booksShearch) {
           BooksAPI.get(book.id).then((serverBook) => book.shelf = serverBook.shelf)
         }
 
         this.setState({ booksShearch })
       }).catch(e => this.setState({ booksShearch: [] }))
+    } else {
+      this.setState({ booksShearch: [] })
     }
   }
 
