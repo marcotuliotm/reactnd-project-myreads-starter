@@ -4,6 +4,7 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import ListAllBooks from './components/ListAllBooks'
 import SearchBook from './components/SearchBook'
+import Loader from 'halogen/PulseLoader'
 
 
 class BooksApp extends React.Component {
@@ -13,15 +14,17 @@ class BooksApp extends React.Component {
     this.state = {
       books: [],
       booksShearch: [],
-      search: '',
+      loading: true,
     }
   }
 
   componentDidMount() {
+    this.setState({ loading: true })
     this.loadBooks()
   }
 
   updateBook = (book, shelf) => {
+    this.setState({ loading: true })
     BooksAPI.update(book, shelf).then(e => {
       book.shelf = shelf
       this.loadBooks()
@@ -54,17 +57,19 @@ class BooksApp extends React.Component {
   }
 
 
-  loadBooks = () => BooksAPI.getAll().then((books) => this.setState({ books }))
+  loadBooks = () => BooksAPI.getAll().then((books) => this.setState({ books, loading: false }))
 
   render() {
     return (
-      <div className="app">
-        <Route path='/search' render={({ history }) => (
-          <SearchBook search={this.state.search} booksShearch={this.state.booksShearch} onUpdateBook={this.updateBook} onShearchBook={this.shearchBook} onClickReturn={() => history.push('/')} />
-        )} />
-        <Route exact path='/' render={({ history }) => (
-          <ListAllBooks books={this.state.books} onUpdateBook={this.updateBook} onClickSearch={() => history.push('/search')} />
-        )} />
+      <div>
+        {this.state.loading ? (<Loader color="#26A65B" size="16px" margin="4px" />) : (<div className="app">
+          <Route path='/search' render={({ history }) => (
+            <SearchBook search={this.state.search} booksShearch={this.state.booksShearch} onUpdateBook={this.updateBook} onShearchBook={this.shearchBook} onClickReturn={() => history.push('/')} />
+          )} />
+          <Route exact path='/' render={({ history }) => (
+            <ListAllBooks books={this.state.books} onUpdateBook={this.updateBook} onClickSearch={() => history.push('/search')} />
+          )} />
+        </div>)}
       </div>
     )
   }
