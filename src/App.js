@@ -15,6 +15,7 @@ class BooksApp extends React.Component {
       books: [],
       booksShearch: [],
       loading: true,
+      search: '',
     }
   }
 
@@ -40,17 +41,17 @@ class BooksApp extends React.Component {
 
   updateBooksShearch = () => {
     if (this.state.search.length > 0) {
-      BooksAPI.search(this.state.search, 20).then((booksShearch) => {
+      this.setState({ loading: true })
+      BooksAPI.getAll().then((books) => BooksAPI.search(this.state.search, 20).then((booksShearch) => {
         if (booksShearch.error) {
           booksShearch = []
+        } else {
+          for (const book of books) {
+            booksShearch.filter(bookShearch => bookShearch.id === book.id).map(bookShearch => bookShearch.shelf = book.shelf)
+          }
         }
-
-        for (const book of booksShearch) {
-          BooksAPI.get(book.id).then((serverBook) => book.shelf = serverBook.shelf)
-        }
-
-        this.setState({ booksShearch })
-      }).catch(e => this.setState({ booksShearch: [] }))
+        this.setState({ booksShearch, loading: false })
+      }).catch(e => this.setState({ booksShearch: [], loading: false })))
     } else {
       this.setState({ booksShearch: [] })
     }
