@@ -5,13 +5,21 @@ import PropTypes from 'prop-types'
 function BookView(props) {
 
   const { title, authors, imageLinks, shelf } = props.book
+  let shelfSelect = ''
+
+  if (!shelf) {
+    shelfSelect = 'none'
+  } else {
+    shelfSelect = shelf
+  }
+
 
   return (
     <div className="book">
       <div className="book-top">
         <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${imageLinks.smallThumbnail})` }}></div>
         <div className="book-shelf-changer">
-          <select defaultValue={shelf} onClick={(e) => props.onUpdateBook(props.book, e.target.value)}>
+          <select defaultValue={shelfSelect} onClick={(e) => props.onUpdateBook(props.book, e.target.value)}>
             <option value="none" disabled>Move to...</option>
             <option value="currentlyReading">Currently Reading</option>
             <option value="wantToRead">Want to Read</option>
