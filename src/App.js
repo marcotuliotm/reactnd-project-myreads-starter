@@ -4,7 +4,6 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import ListAllBooks from './components/ListAllBooks'
 import SearchBook from './components/SearchBook'
-import Loader from 'halogen/PulseLoader'
 
 
 class BooksApp extends React.Component {
@@ -28,9 +27,11 @@ class BooksApp extends React.Component {
     this.setState({ loading: true })
     BooksAPI.update(book, shelf).then(e => {
       book.shelf = shelf
-      this.loadBooks()
-      this.updateBooksShearch()
-    })
+      const books = this.state.books.filter(bookShearch => bookShearch.id !== book.id)
+      books.push(book)
+      this.state.booksShearch.filter(bookShearch => bookShearch.id === book.id).map(bookShearch => bookShearch.shelf = book.shelf)
+      this.setState({ books, loading: false })
+    }).catch(e => this.setState({ loading: false }))
 
   }
 
@@ -61,16 +62,15 @@ class BooksApp extends React.Component {
   loadBooks = () => BooksAPI.getAll().then((books) => this.setState({ books, loading: false }))
 
   render() {
+    const { loading, books, search, booksShearch } = this.state
     return (
-      <div>
-        {this.state.loading ? (<Loader color="#26A65B" size="16px" margin="4px" />) : (<div className="app">
-          <Route path='/search' render={({ history }) => (
-            <SearchBook search={this.state.search} booksShearch={this.state.booksShearch} onUpdateBook={this.updateBook} onShearchBook={this.shearchBook} onClickReturn={() => history.push('/')} />
-          )} />
-          <Route exact path='/' render={({ history }) => (
-            <ListAllBooks books={this.state.books} onUpdateBook={this.updateBook} onClickSearch={() => history.push('/search')} />
-          )} />
-        </div>)}
+      <div className="app">
+        <Route path='/search' render={({ history }) => (
+          <SearchBook loading={loading} search={search} booksShearch={booksShearch} onUpdateBook={this.updateBook} onShearchBook={this.shearchBook} onClickReturn={() => history.push('/')} />
+        )} />
+        <Route exact path='/' render={({ history }) => (
+          <ListAllBooks loading={loading} books={books} onUpdateBook={this.updateBook} onClickSearch={() => history.push('/search')} />
+        )} />
       </div>
     )
   }

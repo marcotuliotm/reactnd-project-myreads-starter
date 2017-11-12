@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 function ListAllBooks(props) {
 
-  const { books, onUpdateBook, onClickSearch } = props
+  const { books, onUpdateBook, onClickSearch, loading } = props
 
   return (
     <div className="list-books">
@@ -13,9 +13,9 @@ function ListAllBooks(props) {
       </div>
       <div className="list-books-content">
         <div>
-          <ListBooks title="Currently Reading" books={books.filter((book) => book.shelf === "currentlyReading")} onUpdateBook={onUpdateBook} />
-          <ListBooks title="Want to Read" books={books.filter((book) => book.shelf === "wantToRead")} onUpdateBook={onUpdateBook} />
-          <ListBooks title="Read" books={books.filter((book) => book.shelf === "read")} onUpdateBook={onUpdateBook} />
+          <ListBooks loading={loading} title="Currently Reading" books={books.filter((book) => book.shelf === "currentlyReading")} onUpdateBook={onUpdateBook} />
+          <ListBooks loading={loading} title="Want to Read" books={books.filter((book) => book.shelf === "wantToRead")} onUpdateBook={onUpdateBook} />
+          <ListBooks loading={loading} title="Read" books={books.filter((book) => book.shelf === "read")} onUpdateBook={onUpdateBook} />
         </div>
       </div>
       <div className="open-search">
@@ -30,6 +30,7 @@ ListAllBooks.propTypes = {
   books: PropTypes.array.isRequired,
   onUpdateBook: PropTypes.func.isRequired,
   onClickSearch: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 }
 
 export default ListAllBooks

@@ -1,34 +1,37 @@
-import React, { Component } from 'react'
+import React from 'react'
 import BookView from './BookView'
 import PropTypes from 'prop-types'
+import Loader from 'halogen/PulseLoader'
 
 
-class ListBooks extends Component {
+function ListBooks(props) {
 
-  static propTypes = {
-    books: PropTypes.array.isRequired,
-    title: PropTypes.string.isRequired,
-    onUpdateBook: PropTypes.func.isRequired
-  }
 
-  render() {
-    const { title, books } = this.props
+  const { title, books,  loading} = props
 
-    return (
-      <div className="bookshelf">
-        <h2 className="bookshelf-title">{title}</h2>
-        <div className="bookshelf-books">
-          <ol className="books-grid">
-            {books.map((book) => (
-              <li key={book.id}>
-                <BookView book={book} onUpdateBook={this.props.onUpdateBook} />
-              </li>
-            ))}
-          </ol>
-        </div>
+  return (
+    <div className="bookshelf">
+      <h2 className="bookshelf-title">{title}</h2>
+      <div className="bookshelf-books">
+      {loading ? (<Loader color="#26A65B" size="16px" margin="4px" />) : (
+        <ol className="books-grid">
+          {books.map((book) => (
+            <li key={book.id}>
+              <BookView book={book} onUpdateBook={props.onUpdateBook} />
+            </li>
+          ))}
+        </ol>
+      )}
       </div>
-    )
-  }
+    </div>
+  )
+}
+
+ListBooks.propTypes = {
+  books: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  onUpdateBook: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 }
 
 export default ListBooks
