@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import ListAllBooks from './components/ListAllBooks'
+
 
 /** 
  This course is not designed to teach Test Driven Development. 
@@ -9,11 +9,8 @@ import ListAllBooks from './components/ListAllBooks'
  is not required.
 **/
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  ReactDOM.render(<App />, div)
+it('App should be defined', () => {
+  expect(App).toBeDefined()
 })
-it('ListAllBooks should be defined', () => {
-  expect(ListAllBooks).toBeDefined()
-})
+
 
