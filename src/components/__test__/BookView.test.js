@@ -38,7 +38,7 @@ const testBooks = {
 			authors: ['Writer Five', 'Writer Six'],
 			imageLinks: { thumbnail: 'http://bookCover.png' },
 			id: 'bKs2xWEECBAL',
-			shelf: 'read'
+		
 		}
 	]
 };
@@ -51,6 +51,11 @@ describe('<BookView />', () => {
 
   it('BookView should be defined', () => {
     const component = shallow(<BookView book={testBooks.books[0]} onUpdateBook={()=>true} />)
+    expect(component).toBeDefined()
+	})
+	
+	it('BookView should be defined and shelf=none', () => {
+    const component = shallow(<BookView book={testBooks.books[2]} onUpdateBook={(e)=>true} />)
     expect(component).toBeDefined()
   })
 })
