@@ -1,13 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import SearchBook from '../SearchBook'
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-15';
 import { testBooks } from './booksData'
-
-configure({ adapter: new Adapter() });
-
-
 
 
 describe('<SearchBook />', () => {
@@ -23,5 +17,19 @@ describe('<SearchBook />', () => {
 	it('SearchBook should be defined and loading=false', () => {
     const component = shallow(<SearchBook search='test' onShearchBook={()=>true} booksShearch={testBooks.books} onUpdateBook={()=>true} onClickReturn={()=>true} loading={false} />)
     expect(component).toBeDefined()
+  })
+
+  it("executando linha 15", () => {
+    const clickReturn = jest.fn();
+    const test = shallow(<SearchBook search='test' onShearchBook={()=>true} booksShearch={testBooks.books} onUpdateBook={()=>true} onClickReturn={clickReturn} loading={false} />)
+    test.find("a").simulate("click");
+    expect(clickReturn).toHaveBeenCalledTimes(1);
+  })
+
+  it("executando linha 17", () => {
+    const shearchBook = jest.fn();
+    const test = shallow(<SearchBook search='test' onShearchBook={shearchBook} booksShearch={testBooks.books} onUpdateBook={()=>true} onClickReturn={()=>true} loading={false} />)
+    test.find('DebounceInput').simulate('change', { target: {value:'some value'} })
+    expect(shearchBook).toHaveBeenCalledTimes(1);
   })
 })

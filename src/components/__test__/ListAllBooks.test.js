@@ -1,14 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import ListAllBooks from '../ListAllBooks'
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-15';
 import { testBooks } from './booksData'
-
-configure({ adapter: new Adapter() });
-
-
-
 
 describe('<ListAllBooks />', () => {
   it('ListAllBooks should be defined', () => {
@@ -23,5 +16,12 @@ describe('<ListAllBooks />', () => {
 	it('ListAllBooks should be defined and loading=false', () => {
     const component = shallow(<ListAllBooks books={testBooks.books} onClickSearch={()=>true} onUpdateBook={()=>true} loading={false} title='test'/>)
     expect(component).toBeDefined()
+  })
+
+  it("executando linha 22", () => {
+    const clickSearch = jest.fn();
+    const test = shallow(<ListAllBooks books={testBooks.books} onClickSearch={clickSearch} onUpdateBook={()=>true} loading={false} title='test'/>)
+    test.find("a").simulate("click");
+    expect(clickSearch).toHaveBeenCalledTimes(1);
   })
 })
